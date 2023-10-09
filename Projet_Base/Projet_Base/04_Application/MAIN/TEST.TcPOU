@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="TEST" Id="{a4afb91a-1cb7-4580-848e-d5f5a964dc59}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM TEST
+VAR
+// create an instance for all FB in base project in order to test if there are errors in the FB ()
+
+	moyenne_test : MOYENNE;
+	time_Test : TIME := T#5s;
+	bTest : BOOL;
+	rValue : REAL;
+	
+END_VAR
+ ]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+moyenne_test(
+	In_fenetre_mesure := time_Test,
+	In_synchro := CalLocalTimeStruct.wSecond MOD 5 = 0,
+	In_valeur := word_to_real(CalLocalTimeStruct.wSecond)
+);
+moyenne_test.Calcul();
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="TEST">
+      <LineId Id="69" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="64" Count="2" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="94" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,324 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_WS" Id="{69de29ce-3076-41ec-975f-9ceadb93b491}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_WS EXTENDS FB_WS_Base
+//////////////////
+//  WS product
+//////////////////
+
+VAR_INPUT PERSISTENT
+	// Parameters of the Object (instance specific) 
+		ParamDurationIntegerGTI : TIME := T#10S ; (* (s) Duration on which the irradiation is integered*)
+END_VAR
+
+VAR_OUTPUT
+	//Child objects
+END_VAR
+
+VAR_INPUT
+	// I/O Inputs 
+		// ALARM MANAGEMENT //
+	Ax_Pyrano		: ARRAY [1..CstNbPyrano] OF FB_ANA_IO ;		
+	A1_Temp_Ext 	: FB_ANA_IO ; 
+	A1_Hygro_Ext 	: FB_ANA_IO ; 
+	A1_WindDir		: FB_ANA_IO ;
+ 	A1_WindSp   	: FB_ANA_IO ; 
+	
+	AX_Temp_Panel	: ARRAY [1..CstNbPanTmp] OF FB_ANA_IO ;	
+	
+END_VAR
+
+VAR
+	TON : TON;
+	ClockCal 		: BOOL;
+	
+	MesDataExd			: WS_AGMA ; 
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="M_AlarmManagement" Id="{89da4e01-90e2-4962-8240-3f5e6569febf}">
+      <Declaration><![CDATA[METHOD M_AlarmManagement
+//////////////////
+// Generates object alarms and manages resets. 
+//////////////////
+
+VAR 
+	// Method local variables (reinitialized at each cycle) 
+	FB_AlarmCodeManager			: FB_AlarmCodeManager ; 
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[///// SYNTHESE A FAIRE //
+
+
+ 
+
+// ALARM CODE //
+	FB_AlarmCodeManager(
+		bAlarm1			:= FALSE,						//
+		bAlarm2			:= FALSE,						//
+		bAlarm3			:= FALSE,						//
+		bAlarm4			:= FALSE,						//
+		bAlarm5			:= FALSE,						//
+		bAlarm6			:= FALSE,						//
+		bAlarm7			:= FALSE,						//
+		bAlarm8			:= FALSE,						//
+		bAlarm9			:= FALSE,						//
+		bAlarm10		:= FALSE,						//
+		bAlarm11		:= FALSE,						//
+		bAlarm12		:= FALSE,						//
+		bAlarm13		:= FALSE,						//
+		bAlarm14		:= FALSE,						//
+		bAlarm15		:= FALSE,						//
+		wAlarmCode		=>MesDataExd.MesData.MesAlarmCode); 
+	
+
+// WARNING CODE //
+	FB_AlarmCodeManager(
+ 		bAlarm1			:= FALSE,						//
+		bAlarm2			:= FALSE,						//
+		bAlarm3			:= FALSE,						//
+		bAlarm4			:= FALSE,						//
+		bAlarm5			:= FALSE,						//
+		bAlarm6			:= FALSE,						//
+		bAlarm7			:= FALSE,						//
+		bAlarm8			:= FALSE,						//
+		bAlarm9			:= FALSE,						//
+		bAlarm10		:= FALSE,						//
+		bAlarm11		:= FALSE,						//
+		bAlarm12		:= FALSE,						//
+		bAlarm13		:= FALSE,						//     
+		bAlarm14		:= FALSE,						//     
+		bAlarm15		:= FALSE,						//
+		wAlarmCode		=>MesDataExd.MesData.MesWarningCode);		
+		
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_EquipmentCalls" Id="{9476ed28-06f4-4f30-a7ab-8005b04eac5d}">
+      <Declaration><![CDATA[METHOD M_EquipmentCalls
+//////////////////
+// Evaluate AMS characteristics
+//////////////////
+
+VAR
+	// Method local variables (reinitialized at each cycle) 
+
+	KK : UINT ;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR KK := 1 TO CstNbPyrano DO
+	AX_Pyrano[KK].M_Execute();
+END_FOR
+
+FOR KK:=1 TO CstNbPyrano DO 
+	Ax_Pyrano[KK].M_Execute() ; 
+END_FOR
+
+FOR KK:=1 TO CstNbPanTmp DO 
+	AX_Temp_Panel[KK].M_Execute() ; 
+END_FOR
+
+
+A1_Temp_Ext.M_Execute() ;  	
+A1_Hygro_Ext.M_Execute() ;  
+A1_WindDir.M_Execute() ; 		
+A1_WindSp.M_Execute()  ;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Evaluate" Id="{362753e4-8360-4b5f-b385-2b34a48b4de9}">
+      <Declaration><![CDATA[METHOD M_Evaluate
+//////////////////
+// Evaluate available Powers and AMG characteristics 
+/////////////////
+
+VAR 
+	// Method local variables (reinitialized at each cycle) 
+	KK : UINT;
+	
+	CalNbPyranoActive		: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//ModbusRTU();
+
+//MesDataExd.Pyran_GTI_1  	:= Ax_Pyrano[1].MesData; 
+//MesDataExd.Pyran_GTI_2  	:= Ax_Pyrano[2].MesData; 
+//MesDataExd.Pyran_GTI_3   	:= Ax_Pyrano[3].MesData; 
+//MesDataExd.Pyran_GTI_SUB 	:= Ax_Pyrano[4].MesData; 
+//MesDataExd.Pyran_GHI    	:= Ax_Pyrano[5].MesData; 
+//
+//MesDataExd.HygroSensor_Ext := A1_Hygro_Ext.MesData; 
+//MesDataExd.TempSensor_Ext	:= A1_Temp_Ext.MesData ; 
+//MesDataExd.windDir			:= A1_WindDir.MesData ; 
+//MesDataExd.WindSp 			:= A1_WindSp.MesData   ; 
+
+// Calculated and Cumulated Values
+MesDataExd.MesData.MesGTI := 0 ; 
+
+FOR KK:= 1 TO CstNbPyrano DO 
+	//MesDataExd.MesData.MesGTI := MesDataExd.MesData.MesGTI +  SEL( Ax_Pyrano[KK].MesData.MesAlarmCode = 0 , 0 , Ax_Pyrano[KK].MesData.Value )  ; 
+//	CalNbPyranoActive := CalNbPyranoActive + SEL( Ax_Pyrano[KK].MesData.MesAlarmCode = 0 , 0 , 1 ) ; 
+
+END_FOR 
+MesDataExd.MesData.MesGTI := SEL( CalNbPyranoActive>= 1 , 0 , MesDataExd.MesData.MesGTI / CalNbPyranoActive ) ; 
+
+TON( IN := NOT TON.Q, PT := ParamDurationIntegerGTI );
+
+ClockCal := TON.Q;
+
+IF ClockCal THEN 
+MesDataExd.MesData.MesGHI_Cumul := MesDataExd.MesData.MesGHI_Cumul + MesDataExd.Pyran_GHI.MesData.Value * TIME_TO_INT(ParamDurationIntegerGTI)/3600 / 1000  ;
+MesDataExd.MesData.MesGTI_Cumul := MesDataExd.MesData.MesGTI_Cumul + MesDataExd.MesData.MesGTI * TIME_TO_INT(ParamDurationIntegerGTI)/3600 /1000  ;
+	ClockCal := FALSE;
+END_IF
+
+MesDataExd.TempSensor_Panel_PTR1 := AX_Temp_Panel[1].MesDataExd; 
+MesDataExd.TempSensor_Panel_PTR2 := AX_Temp_Panel[2].MesDataExd; 
+MesDataExd.TempSensor_Panel_PTR3 := AX_Temp_Panel[3].MesDataExd; 
+
+ClockCal := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Init" Id="{94312ea3-d3d4-4ffd-bab7-ba7d297ef355}">
+      <Declaration><![CDATA[METHOD M_Init 
+VAR
+	KK 				: UINT;
+	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[A1_Temp_Ext.ParamNbSensors := 1  ;
+A1_Temp_Ext.ParamForced_4_20 := FALSE ; 
+A1_Temp_Ext.ParamDiffMax := 10 ; // not used 
+A1_Temp_Ext.ParamFix:=1 ; // not used ; 
+A1_Temp_Ext.ParamPT100 := FALSE ; 
+A1_Temp_Ext.ParamRangeMax := 60  ;	// to be changed .  
+A1_Temp_Ext.ParamRangeMin := 15 ; 	// to be changed 
+A1_Temp_Ext.ParamVarMaxAlarm := 50 ; 
+A1_Temp_Ext.ParamVarMaxWarning := 40; 
+A1_Temp_Ext.ParamVarMinAlarm := 0 ; 
+A1_Temp_Ext.ParamVarMinWarning := 5; 
+
+A1_Hygro_Ext.ParamNbSensors := 1  ;
+A1_Hygro_Ext.ParamForced_4_20 := FALSE ; 
+A1_Hygro_Ext.ParamDiffMax := 10 ; // not used 
+A1_Hygro_Ext.ParamFix:=1 ; // not used ; 
+A1_Hygro_Ext.ParamPT100 := FALSE ; 
+A1_Hygro_Ext.ParamRangeMax := 100  ; 
+A1_Hygro_Ext.ParamRangeMin := 0 ; 
+A1_Hygro_Ext.ParamVarMaxAlarm := 100 ; 
+A1_Hygro_Ext.ParamVarMaxWarning := 100; 
+A1_Hygro_Ext.ParamVarMinAlarm := -5 ; 
+A1_Hygro_Ext.ParamVarMinWarning := -5; 
+
+A1_WindSp.ParamNbSensors := 1  ;
+A1_WindSp.ParamForced_4_20 := FALSE ; 
+A1_WindSp.ParamDiffMax := 10 ; // not used 
+A1_WindSp.ParamFix:=1 ; // not used ; 
+A1_WindSp.ParamPT100 := FALSE ; 
+A1_WindSp.ParamRangeMax := 30  ; 
+A1_WindSp.ParamRangeMin := 0 ; 
+A1_WindSp.ParamVarMaxAlarm := 120 ; 
+A1_WindSp.ParamVarMaxWarning := 100; 
+A1_WindSp.ParamVarMinAlarm := -5 ; 
+A1_WindSp.ParamVarMinWarning := -5; 
+
+A1_WindDir.ParamNbSensors := 1  ;
+A1_WindDir.ParamForced_4_20 := FALSE ; 
+A1_WindDir.ParamDiffMax := 10 ; // not used 
+A1_WindDir.ParamFix:=1 ; // not used ; 
+A1_WindDir.ParamPT100 := FALSE ; 
+A1_WindDir.ParamRangeMax := 30  ; 
+A1_WindDir.ParamRangeMin := 0 ; 
+A1_WindDir.ParamVarMaxAlarm := 120 ; 
+A1_WindDir.ParamVarMaxWarning := 100; 
+A1_WindDir.ParamVarMinAlarm := -5 ; 
+A1_WindDir.ParamVarMinWarning := -5; 
+
+
+
+
+
+FOR KK:=1 TO CstNbPyrano DO 
+	Ax_Pyrano[KK].ParamRangeMax := 1200 ; 
+	Ax_Pyrano[KK].ParamRangeMin := 0 ; 	
+	Ax_Pyrano[KK].ParamVarMaxAlarm := 1500 ; 
+	Ax_Pyrano[KK].ParamVarMinAlarm := -10 ;	
+
+	
+END_FOR
+
+FOR KK:=1 TO CstNbPanTmp DO 
+
+	AX_Temp_Panel[KK].ParamRangeMax := 90 ; 
+	AX_Temp_Panel[KK].ParamRangeMin := -10 ; 	
+	AX_Temp_Panel[KK].ParamVarMaxAlarm := 70 ; 
+	AX_Temp_Panel[KK].ParamVarMinAlarm := 0 ;	
+	AX_Temp_Panel[KK].ParamNbSensors := 2 ; 
+	AX_Temp_Panel[KK].ParamDiffMax := 5 ; 	
+	
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_WS">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_WS.M_AlarmManagement">
+      <LineId Id="252" Count="0" />
+      <LineId Id="292" Count="0" />
+      <LineId Id="295" Count="0" />
+      <LineId Id="291" Count="0" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="30" Count="21" />
+      <LineId Id="53" Count="15" />
+      <LineId Id="281" Count="0" />
+      <LineId Id="223" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_WS.M_EquipmentCalls">
+      <LineId Id="149" Count="15" />
+      <LineId Id="126" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_WS.M_Evaluate">
+      <LineId Id="162" Count="13" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="176" Count="1" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="179" Count="13" />
+      <LineId Id="100" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_WS.M_Init">
+      <LineId Id="62" Count="10" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="73" Count="9" />
+      <LineId Id="60" Count="1" />
+      <LineId Id="83" Count="9" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="99" Count="10" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="116" Count="6" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="138" Count="1" />
+      <LineId Id="123" Count="3" />
+      <LineId Id="145" Count="2" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="115" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

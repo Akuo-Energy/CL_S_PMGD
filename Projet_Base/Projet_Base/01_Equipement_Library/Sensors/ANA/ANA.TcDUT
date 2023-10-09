@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ANA" Id="{8b002265-f55c-4319-bd05-bbf47e6cb927}">
+    <Declaration><![CDATA[TYPE ANA :
+STRUCT
+	Value 					: REAL ;	(* (-) Analogic Value 					*)
+	                                    
+	MesAlarmCode			: WORD ;	(* (NA) Internal Akuo AlarmCode     *)
+	MesWarningCode			: WORD ;    (* (NA) Internal Akuo WarningCode   *)
+	MesEventCode			: WORD ;    (* (NA) Internal Akuo EventCode		*)
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
+
+
+
+
+
+
+
+
+
+
+
+

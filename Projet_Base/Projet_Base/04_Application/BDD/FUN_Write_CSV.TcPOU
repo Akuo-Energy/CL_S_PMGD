@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FUN_Write_CSV" Id="{816e0a32-1332-45e9-86c6-85f74d76957f}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM FUN_Write_CSV
+Var
+    WriteValue          : FB_Write_CSV;
+END_VAR
+VAR_INPUT
+ InDirectory             : T_MaxString;
+AX_Variables            : ARRAY [1..500] OF ST_ValuesWrite;
+END_VAR
+    ]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+WriteValue(InDirectory := InDirectory, ParamNbColumns := 36,AX_StructureValues := AX_Variables);
+    ]]></ST>
+    </Implementation>
+    <LineIds Name="FUN_Write_CSV">
+      <LineId Id="76" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
